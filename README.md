@@ -1,6 +1,3 @@
-Hier ist die vollständige Antwort in Markdown-Format, die du direkt in deine `README.md` einfügen kannst:
-
-```markdown
 # Fullstack Projekt: React + Node.js + PostgreSQL mit Docker
 
 Dieses Projekt enthält ein Beispiel für eine Fullstack-Anwendung, die aus einem **Frontend** (React), einem **Backend** (Node.js + Express) und einer **PostgreSQL-Datenbank** besteht. Alle Services werden mithilfe von **Docker** orchestriert und in separaten Containern ausgeführt.
@@ -11,7 +8,6 @@ Dieses Projekt enthält ein Beispiel für eine Fullstack-Anwendung, die aus eine
 
 Die Struktur des Projekts sieht wie folgt aus:
 
-```
 my-project/
 ├── frontend/
 │   ├── Dockerfile
