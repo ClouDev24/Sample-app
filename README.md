@@ -224,3 +224,224 @@ services:
       - "5000"        # Exponiert den Port 5000 für das interne Netzwerk (nicht nach außen)
     depends_on:
       - database
+
+
+Hier sind die nächsten Schritte, um die Container in einem lokalen Kubernetes **Kind**-Cluster auszuführen und die Images mit einem **GitHub Workflow** in Docker Hub zu pushen:
+
+---
+
+## **1. Container-Images in Docker Hub hochladen**
+
+### **Voraussetzungen**
+- Ein **Docker Hub Account**.
+- Zugriff auf das GitHub Repository mit Push-Berechtigungen.
+
+### **Schritt 1: Docker Hub Zugangsdaten als GitHub Secrets hinzufügen**
+1. Gehe in dein GitHub Repository.
+2. Öffne die **Settings > Secrets and variables > Actions**.
+3. Füge folgende Secrets hinzu:
+   - **`DOCKER_USERNAME`**: Dein Docker Hub Benutzername.
+   - **`DOCKER_PASSWORD`**: Dein Docker Hub Passwort.
+
+---
+
+### **Schritt 2: GitHub Workflow erstellen**
+
+Erstelle im Repository die Datei `.github/workflows/docker-publish.yml` mit folgendem Inhalt:
+
+```yaml
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main  # Workflow wird bei Änderungen im "main"-Branch ausgeführt
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3  # Checkt den Code des Repositories aus
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2  # Loggt sich bei Docker Hub ein
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub Benutzername aus Secrets
+        password: ${{ secrets.DOCKER_PASSWORD }}  # Docker Hub Passwort aus Secrets
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2  # Aktiviert Buildx für Multi-Architektur-Builds
+
+    - name: Build and Push Frontend
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend  # Build-Kontext für das Frontend
+        push: true  # Image wird nach Docker Hub gepusht
+        tags: ${{ secrets.DOCKER_USERNAME }}/frontend:latest  # Image-Tag
+
+    - name: Build and Push Backend
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend  # Build-Kontext für das Backend
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/backend:latest
+
+    - name: Build and Push Database
+      uses: docker/build-push-action@v5
+      with:
+        context: ./database  # Falls ein Dockerfile für die DB benötigt wird
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/database:latest
+```
+
+### **Workflow auslösen**
+- Sobald du Änderungen in den `main`-Branch pusht, werden die Images automatisch gebaut und in Docker Hub veröffentlicht.
+
+---
+
+## **2. Images in einem lokalen Kubernetes Kind Cluster ausführen**
+
+### **Schritt 1: Kind Cluster installieren**
+Installiere **Kind**, ein leichtgewichtiges Kubernetes für lokale Tests. 
+
+#### Installation:
+```bash
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+```
+
+### **Schritt 2: Cluster erstellen**
+Erstelle einen neuen Kind-Cluster:
+```bash
+kind create cluster --name my-cluster
+```
+
+### **Schritt 3: Docker Images in den Cluster laden**
+Damit der Kind-Cluster die Images von Docker Hub verwenden kann:
+1. **kubectl** installieren:
+   ```bash
+   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+   chmod +x ./kubectl
+   sudo mv ./kubectl /usr/local/bin/kubectl
+   ```
+
+2. Lade die Images von Docker Hub in den Cluster:
+   ```bash
+   docker pull <DOCKER_USERNAME>/frontend:latest
+   docker pull <DOCKER_USERNAME>/backend:latest
+   kind load docker-image <DOCKER_USERNAME>/frontend:latest --name my-cluster
+   kind load docker-image <DOCKER_USERNAME>/backend:latest --name my-cluster
+   ```
+
+---
+
+### **Schritt 4: Kubernetes Deployments erstellen**
+
+Erstelle eine Datei `k8s-deployment.yml` mit folgendem Inhalt:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend
+spec:
+  replicas: 1  # Anzahl der Frontend-Instanzen
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: <DOCKER_USERNAME>/frontend:latest  # Docker Image für das Frontend
+        ports:
+        - containerPort: 3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 1  # Anzahl der Backend-Instanzen
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: <DOCKER_USERNAME>/backend:latest  # Docker Image für das Backend
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000  # Weiterleitung an den Frontend-Port
+  type: NodePort  # Service von außerhalb erreichbar machen
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000  # Weiterleitung an den Backend-Port
+  type: ClusterIP  # Nur intern im Cluster erreichbar
+```
+
+---
+
+### **Schritt 5: Deployments anwenden**
+```bash
+kubectl apply -f k8s-deployment.yml
+```
+
+---
+
+### **Schritt 6: Frontend im Browser testen**
+1. Finde den **NodePort** des Frontend-Services:
+   ```bash
+   kubectl get svc frontend-service
+   ```
+   Suche die Spalte `PORT(S)`. Beispielsweise könnte es `30007:80/TCP` sein.
+
+2. Öffne deinen Browser und navigiere zu:
+   ```
+   http://localhost:<NodePort>
+   ```
+
+---
+
+### **Zusammenfassung**
+- Der Workflow lädt deine Docker-Images automatisch in Docker Hub hoch.
+- Das Kind-Cluster führt die Images in isolierten Containern aus.
+- Services sind intern entkoppelt und können unabhängig skaliert werden.
+```
