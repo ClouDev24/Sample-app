@@ -445,3 +445,84 @@ kubectl apply -f k8s-deployment.yml
 - Das Kind-Cluster führt die Images in isolierten Containern aus.
 - Services sind intern entkoppelt und können unabhängig skaliert werden.
 ```
+
+
+In Kubernetes arbeiten **Deployments**, **Services** und (optional) **Virtual Services** zusammen, um Anwendungen bereitzustellen, zu skalieren und den Netzwerkzugriff zu steuern. 
+
+---
+
+### **Beziehungen:**
+
+1. **Deployments:**
+   - Verwalten die Pods (Container-Instanzen) deiner Anwendung.
+   - Sorgen für Skalierung, Updates und Selbstheilung (z. B. Neustart abgestürzter Pods).
+
+2. **Services:**
+   - Stellen einen stabilen Netzwerkendpunkt bereit, der die dynamischen Pods eines Deployments kapselt.
+   - Ermöglichen die Kommunikation zwischen Anwendungen im Cluster oder von außen.
+   - Typen:
+     - **ClusterIP:** Intern zugänglich.
+     - **NodePort:** Von außen auf einem festen Port zugänglich.
+     - **LoadBalancer:** Nutzt Cloud-Load-Balancer (z. B. AWS ELB).
+   
+3. **Virtual Services** (Istio oder andere Service Meshes):
+   - Abstraktionsschicht, die **intelligente Traffic-Steuerung** bietet.
+   - Definiert Routen, Regeln und Policies, z. B.:
+     - **Traffic Splitting:** Weiterleitung zu unterschiedlichen Versionen (z. B. Canary Deployments).
+     - **Retries und Timeouts.**
+     - **Externe Anbindungen.**
+
+---
+
+### **Ablauf:**
+1. **Deployment:** Erstellt Pods (z. B. für das Backend).
+2. **Service:** Verbindet Clients (Frontend oder andere Pods) mit den Pods des Deployments über eine festgelegte IP/Port.
+3. **Virtual Service:** Optional für detaillierte Routing- und Traffic-Management-Funktionen.
+
+---
+
+### **Grafische Darstellung**
+
+#### Textuelle Erklärung:
+1. Clients senden Anfragen (z. B. HTTP) an den **Service**.
+2. Der **Service** leitet die Anfrage an Pods des **Deployments** weiter.
+3. Ein **Virtual Service** steuert den Datenfluss zusätzlich und kann Regeln anwenden (z. B. 80% Traffic zu Version 1, 20% zu Version 2).
+
+#### Visualisierung:
+
+```plaintext
+                          +----------------+
+                          |  External App  |
+                          +----------------+
+                                  |
+                                  v
+                     +----------------------+
+                     |      Virtual Service |
+                     +----------------------+
+                                |
+           +--------------------------------------------+
+           |                                            |
+           v                                            v
+  +--------------------+                       +--------------------+
+  |   Service (v1)     |                       |   Service (v2)     |
+  +--------------------+                       +--------------------+
+           |                                            |
+           v                                            v
++--------------------------+              +--------------------------+
+| Deployment (Pods v1)     |              | Deployment (Pods v2)     |
+|  +--------------------+  |              |  +--------------------+  |
+|  |      Pod v1        |  |              |  |      Pod v2        |  |
+|  +--------------------+  |              |  +--------------------+  |
+|  |      Pod v1        |  |              |  |      Pod v2        |  |
+|  +--------------------+  |              |  +--------------------+  |
++--------------------------+              +--------------------------+
+```
+
+---
+
+### **Zusammenhang erklärt:**
+- **Deployment**: Verwaltet die Anwendung (Pods).
+- **Service**: Verbindet Clients mit den Deployments.
+- **Virtual Service**: Fügt zusätzliche Routing-, Load-Balancing- oder Traffic-Management-Funktionen hinzu.
+
+Falls du möchtest, kann ich das auch als Bild erstellen!
