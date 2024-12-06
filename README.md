@@ -1,6 +1,3 @@
-Hier ist der vollständige Markdown-Inhalt, einschließlich der Kommentare im Code für alle Abschnitte:
-
-```markdown
 # Fullstack Projekt: React + Node.js + PostgreSQL mit Docker
 
 Dieses Projekt enthält ein Beispiel für eine Fullstack-Anwendung, die aus einem **Frontend** (React), einem **Backend** (Node.js + Express) und einer **PostgreSQL-Datenbank** besteht. Alle Services werden mithilfe von **Docker** orchestriert und in separaten Containern ausgeführt.
@@ -11,7 +8,6 @@ Dieses Projekt enthält ein Beispiel für eine Fullstack-Anwendung, die aus eine
 
 Die Struktur des Projekts sieht wie folgt aus:
 
-```
 my-project/
 ├── frontend/
 │   ├── Dockerfile
@@ -22,7 +18,7 @@ my-project/
 ├── database/
 │   └── init.sql
 ├── docker-compose.yml
-```
+
 
 ### **Erläuterungen:**
 - **`frontend/`**: Enthält die React-Anwendung für die Benutzeroberfläche.
