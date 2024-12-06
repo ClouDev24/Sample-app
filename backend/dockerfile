@@ -1,7 +1,7 @@
-FROM node:18 # Basis-Image: Node.js in Version 18
-WORKDIR /app # Arbeitsverzeichnis im Container
-COPY package*.json ./ # Kopiert die Paketdefinitionen (package.json und package-lock.json)
-RUN npm install # Installiert die Abhängigkeiten
-COPY . . # Kopiert den gesamten Quellcode in das Arbeitsverzeichnis
-CMD ["node", "index.js"] # Startet den Node.js-Server
-EXPOSE 5000 # Exponiert den Port 5000 für interne Anfragen
+FROM node:18 
+WORKDIR /app 
+COPY package*.json ./ 
+RUN npm install 
+COPY . . 
+CMD ["node", "index.js"]
+EXPOSE 5000
