@@ -27,18 +27,18 @@ jobs:
       with:
         context: ./frontend  # Build-Kontext für das Frontend
         push: true  # Image wird nach Docker Hub gepusht
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest  # Image-Tag
+        tags: cloudev24/frontend:latest  # Image-Tag
 
     - name: Build and Push Backend
       uses: docker/build-push-action@v5
       with:
         context: ./backend  # Build-Kontext für das Backend
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+        tags: cloudev24/backend:latest
 
     - name: Build and Push Database
       uses: docker/build-push-action@v5
       with:
         context: ./database  # Falls ein Dockerfile für die DB benötigt wird
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/database:latest
+        tags: cloudev24/database:latest
