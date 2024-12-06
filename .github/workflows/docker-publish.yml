@@ -35,10 +35,3 @@ jobs:
         context: ./backend  # Build-Kontext für das Backend
         push: true
         tags: cloudev24/backend:latest
-
-    - name: Build and Push Database
-      uses: docker/build-push-action@v5
-      with:
-        context: ./database  # Falls ein Dockerfile für die DB benötigt wird
-        push: true
-        tags: cloudev24/database:latest
