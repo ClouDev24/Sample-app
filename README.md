@@ -53,7 +53,7 @@ Nach dem Ausführen befindet sich im Verzeichnis frontend das React-Projekt.
 Ordner- und Dateistruktur von frontend
 Nach dem Ausführen des Befehls sieht die Struktur ungefähr so aus:
 
-csharp
+```csharp
 Code kopieren
 frontend/
 ├── node_modules/       # Alle installierten npm-Pakete
@@ -63,6 +63,8 @@ frontend/
 ├── package.json        # Projekt- und Abhängigkeitsinformationen
 ├── README.md           # Dokumentation des Projekts
 ├── yarn.lock / package-lock.json # Abhängigkeits-Management
+```
+
 Was passiert während der Ausführung?
 Installation der Abhängigkeiten: npm installiert die notwendigen Pakete wie React, React DOM und React Scripts.
 Einrichten der Dateistruktur: Die oben gezeigte Struktur wird erstellt.
