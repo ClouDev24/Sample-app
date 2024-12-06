@@ -15,15 +15,15 @@ services:
       - database
 
   database:
-      image: postgres:latest  # Das offizielle PostgreSQL-Image
+      image: postgres:latest  
       environment:
-        POSTGRES_USER: admin  # Definiert den Datenbankbenutzer
-        POSTGRES_PASSWORD: admin123  # Definiert das Passwort für den Benutzer
-        POSTGRES_DB: mydatabase  # Der Name der Datenbank, die erstellt wird
+        POSTGRES_USER: admin  
+        POSTGRES_PASSWORD: admin123
+        POSTGRES_DB: mydatabase  
       volumes:
-        - postgres_data:/var/lib/postgresql/data  # Persistente Speicherung der Datenbank
+        - postgres_data:/var/lib/postgresql/data
       ports:
-        - "5432:5432"  # Port für den Datenbankzugriff von außen
+        - "5432:5432" 
 
   volumes:
-    postgres_data:  # Volumen für die persistente Speicherung der Daten
+    postgres_data:  
