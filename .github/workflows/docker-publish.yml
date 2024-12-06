@@ -1,0 +1,44 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main  # Workflow wird bei Änderungen im "main"-Branch ausgeführt
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3  # Checkt den Code des Repositories aus
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2  # Loggt sich bei Docker Hub ein
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub Benutzername aus Secrets
+        password: ${{ secrets.DOCKER_PASSWORD }}  # Docker Hub Passwort aus Secrets
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2  # Aktiviert Buildx für Multi-Architektur-Builds
+
+    - name: Build and Push Frontend
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend  # Build-Kontext für das Frontend
+        push: true  # Image wird nach Docker Hub gepusht
+        tags: ${{ secrets.DOCKER_USERNAME }}/frontend:latest  # Image-Tag
+
+    - name: Build and Push Backend
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend  # Build-Kontext für das Backend
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/backend:latest
+
+    - name: Build and Push Database
+      uses: docker/build-push-action@v5
+      with:
+        context: ./database  # Falls ein Dockerfile für die DB benötigt wird
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/database:latest
