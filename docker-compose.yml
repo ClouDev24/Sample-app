@@ -3,13 +3,13 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"  # Mappt Port 3000 des Containers auf Port 3000 des Hosts
+      - "3000:3000"  
     depends_on:
-      - backend      # Stellt sicher, dass das Backend vor dem Frontend gestartet wird
+      - backend      
 
   backend:
     build: ./backend
     expose:
-      - "5000"        # Exponiert den Port 5000 für das interne Netzwerk (nicht nach außen)
+      - "5000"        
     depends_on:
       - database
