@@ -13,3 +13,17 @@ services:
       - "5000"        
     depends_on:
       - database
+
+  database:
+      image: postgres:latest  # Das offizielle PostgreSQL-Image
+      environment:
+        POSTGRES_USER: admin  # Definiert den Datenbankbenutzer
+        POSTGRES_PASSWORD: admin123  # Definiert das Passwort für den Benutzer
+        POSTGRES_DB: mydatabase  # Der Name der Datenbank, die erstellt wird
+      volumes:
+        - postgres_data:/var/lib/postgresql/data  # Persistente Speicherung der Datenbank
+      ports:
+        - "5432:5432"  # Port für den Datenbankzugriff von außen
+
+  volumes:
+    postgres_data:  # Volumen für die persistente Speicherung der Daten
