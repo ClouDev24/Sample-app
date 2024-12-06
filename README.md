@@ -7,7 +7,7 @@ Dieses Projekt enthält ein Beispiel für eine Fullstack-Anwendung, die aus eine
 ## Projektstruktur
 
 Die Struktur des Projekts sieht wie folgt aus:
-
+```markdown
 my-project/
 ├── frontend/
 │   ├── Dockerfile
@@ -18,7 +18,7 @@ my-project/
 ├── database/
 │   └── init.sql
 ├── docker-compose.yml
-
+```
 
 ### **Erläuterungen:**
 - **`frontend/`**: Enthält die React-Anwendung für die Benutzeroberfläche.
