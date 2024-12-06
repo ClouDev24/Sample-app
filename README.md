@@ -263,7 +263,7 @@ services:
       - "5000"        # Exponiert den Port 5000 für das interne Netzwerk (nicht nach außen)
     depends_on:
       - database
-
+```
 
 Hier sind die nächsten Schritte, um die Container in einem lokalen Kubernetes **Kind**-Cluster auszuführen und die Images mit einem **GitHub Workflow** in Docker Hub zu pushen:
 
