@@ -38,6 +38,47 @@ Das Frontend bietet eine Benutzeroberfläche, um Daten einzugeben und anzuzeigen
    ```bash
    npx create-react-app frontend
    ```
+#### **Erläuterung:**
+Der Befehl npx create-react-app frontend erstellt ein neues React-Projekt in einem Ordner namens frontend. Hier ist eine detaillierte Erklärung, was dabei passiert:
+
+1. npx
+npx ist ein Tool, das mit Node.js installiert wird. Es ermöglicht dir, Pakete auszuführen, ohne sie global zu installieren.
+In diesem Fall wird create-react-app direkt von npm heruntergeladen und ausgeführt, ohne dass du es vorher installieren musst.
+2. create-react-app
+Dieses Tool generiert ein vollständiges Grundgerüst für eine React-Anwendung.
+Es erstellt automatisch alle benötigten Dateien, Konfigurationen und Abhängigkeiten, damit du sofort mit der Entwicklung beginnen kannst.
+3. frontend
+Der letzte Parameter gibt den Namen des zu erstellenden Projektordners an (in diesem Fall frontend).
+Nach dem Ausführen befindet sich im Verzeichnis frontend das React-Projekt.
+Ordner- und Dateistruktur von frontend
+Nach dem Ausführen des Befehls sieht die Struktur ungefähr so aus:
+
+csharp
+Code kopieren
+frontend/
+├── node_modules/       # Alle installierten npm-Pakete
+├── public/             # Öffentlich zugängliche Dateien (z. B. index.html)
+├── src/                # Quellcode der React-App (z. B. App.js)
+├── .gitignore          # Dateien, die Git ignorieren soll
+├── package.json        # Projekt- und Abhängigkeitsinformationen
+├── README.md           # Dokumentation des Projekts
+├── yarn.lock / package-lock.json # Abhängigkeits-Management
+Was passiert während der Ausführung?
+Installation der Abhängigkeiten: npm installiert die notwendigen Pakete wie React, React DOM und React Scripts.
+Einrichten der Dateistruktur: Die oben gezeigte Struktur wird erstellt.
+Vorbereitete Beispielanwendung: Ein einfaches React-Projekt wird generiert, das sofort funktioniert.
+Nach der Installation
+Um das Projekt zu starten, kannst du folgende Befehle verwenden:
+
+Gehe in das Verzeichnis:
+bash
+Code kopieren
+cd frontend
+Starte den Entwicklungsserver:
+bash
+Code kopieren
+npm start
+Deine App wird standardmäßig unter http://localhost:3000 verfügbar sein.   
 
 2. Passe die Hauptdatei (`frontend/src/App.js`) an, um ein Formular und eine Liste anzuzeigen.
 
