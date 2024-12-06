@@ -1,0 +1,7 @@
+FROM node:18 # Node.js-Image in Version 18 als Basis
+WORKDIR /app # Arbeitsverzeichnis im Container
+COPY package*.json ./ # Kopiert die Paketdefinitionen (package.json und package-lock.json)
+RUN npm install # Installiert die Abhängigkeiten
+COPY . . # Kopiert den restlichen Quellcode in das Arbeitsverzeichnis
+CMD ["npm", "start"] # Startet die React-Anwendung im Entwicklungsmodus
+EXPOSE 3000 # Container-externer Port für das Fronten
